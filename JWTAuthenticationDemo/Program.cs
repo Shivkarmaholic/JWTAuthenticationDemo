@@ -4,6 +4,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddJWTTokenServices(builder.Configuration);
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(10000);
+}
+    ); ;
 
 // Add services to the container.
 
@@ -36,6 +42,7 @@ builder.Services.AddSwaggerGen(options => {
 
 var app = builder.Build();
 
+app.UseSession();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

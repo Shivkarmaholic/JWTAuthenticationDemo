@@ -46,6 +46,9 @@ namespace JWTAuthenticationDemo.Controllers
                     var user = logins.Where(x => x.UserName.Equals(userLogins.UserName, StringComparison.OrdinalIgnoreCase)
                                         && x.Password.Equals(userLogins.Password, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 
+                    HttpContext.Session.SetString("username", userLogins.UserName);
+                    HttpContext.Session.SetString("id",Convert.ToString(new Guid()));
+
                     Token = JwtHelpers.GenTokenkey(new UserTokens()
                     {
                         EmailId = user.EmailId,
@@ -73,7 +76,13 @@ namespace JWTAuthenticationDemo.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetList()
         {
-            return Ok(logins);
+            var x = new
+            {
+                x = HttpContext.Session.GetString("username"),
+                y = HttpContext.Session.GetString("id"),
+            };
+
+            return Ok(x) ;
         }
     }
 }
